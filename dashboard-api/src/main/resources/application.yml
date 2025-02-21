@@ -17,5 +17,4 @@ basyx:
   externalurl: "http://localhost:8085"
 
 ld-sso:
-  apiToken: ${LD_SSO_API_TOKEN}
   baseUrl: ${LD_SSO_BASE_URL}

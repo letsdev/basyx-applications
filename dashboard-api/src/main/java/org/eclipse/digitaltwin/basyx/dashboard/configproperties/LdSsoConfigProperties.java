@@ -11,7 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("ld-sso")
 public class LdSsoConfigProperties {
 
-    String apiToken;
-
     String baseUrl;
 }
