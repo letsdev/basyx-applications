@@ -10,11 +10,11 @@ spring:
       username: ${DB_USERNAME:mongoAdmin}
       password: ${DB_PASSWORD:mongoPassword}
 
-
 basyx:
   cors:
     allowed-origins: "*"
     allowed-methods: "GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD"
   externalurl: "http://localhost:8085"
 
-
+ld-sso:
+  baseUrl: ${LD_SSO_BASE_URL}
