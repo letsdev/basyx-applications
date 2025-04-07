@@ -4,14 +4,17 @@ server:
 spring:
   data:
     mongodb:
-      host: ${DB_HOST:mongo}
-      database: ${DB_NAME:aas-dashboard}
+      host: mongodb.database.svc.cluster.local
+      database: aas-dashboard
       authentication-database: admin
-      username: ${DB_USERNAME:mongoAdmin}
-      password: ${DB_PASSWORD:mongoPassword}
+      username: root
+      password: nrEPLwl3Me
 
 basyx:
   cors:
     allowed-origins: "*"
     allowed-methods: "GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD"
-  externalurl: "http://localhost:8085"
+  externalurl: "https://dashboard.aas.trumpf.twinmap.de"
+
+ld-sso:
+  baseUrl: "https://sso.twinmap.de/"

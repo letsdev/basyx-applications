@@ -15,8 +15,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /application
 # Copy the jar file from the build stage
 COPY --from=build /workspace/target/dashboard.jar app.jar
-COPY src/main/resources/application.yml application.yml
 # Run the Application
-ENTRYPOINT ["java" , "-jar" , "app.jar"]
+ENTRYPOINT ["java" , "-Dspring.config.location=file:/application.yml", "-jar" , "app.jar"]
 # Make port 8085 available to the world outside this container
 EXPOSE 8085
