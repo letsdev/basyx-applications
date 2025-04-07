@@ -21,7 +21,9 @@ public class WebSecurityConfig {
 
         this.ldSsoConfigProperties = ldSsoConfigProperties;
     }
-
+    Logger log = LoggerFactory.getLogger("WebSecurityConfig");
+    log.info("LD SSO BASE URL: {}", ldSsoConfigProperties.getBaseUrl());
+    
     @Bean
     public  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -35,7 +37,7 @@ public class WebSecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(customizer -> customizer
-                        anyRequest().authenticated();
+                        .anyRequest().authenticated();
                 );
 
         return http.build();
