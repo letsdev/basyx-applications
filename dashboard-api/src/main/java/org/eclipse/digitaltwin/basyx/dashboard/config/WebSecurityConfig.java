@@ -44,6 +44,6 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.debug(false);
+        return web -> web.debug(ldSsoConfigProperties.getDebugEnabled());
     }
 }
