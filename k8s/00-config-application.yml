@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-${K8S_NAME}-application
+data:
+  application.yml: |
+
+    spring:
+      data:
+        mongodb:
+          host: ${K8S_SECRET_DB_HOST_MONGO}
+          database: ${K8S_SECRET_DB_NAME}
+          authentication-database: admin
+          username: ${K8S_SECRET_DB_USERNAME}
+          password: ${K8S_SECRET_DB_PASSWORD}

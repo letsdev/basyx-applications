@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${K8S_NAME}
+  name: ${K8S_NAME}
+  annotations:
+    kubernetes.io/change-cause: Deployed image version ${K8S_IMAGE_VERSION}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${K8S_NAME}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ${K8S_NAME}
+    spec:
+      imagePullSecrets:
+        - name: ${K8S_IMAGE_SECRET}
+      containers:
+        - image: ${K8S_IMAGE}:${K8S_IMAGE_VERSION}
+          name: ${K8S_NAME}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: app
+            - containerPort: 5005
+              name: debug
+          env:
+            - name: K8S_SECRET_LD_SSO_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ld-sso-config-${K8S_NAME}
+                  key: base_url
+            - name: K8S_SECRET_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-${K8S_NAME}
+                  key: host
+            - name: K8S_SECRET_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-${K8S_NAME}
+                  key: database
+            - name: K8S_SECRET_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-${K8S_NAME}
+                  key: user
+            - name: K8S_SECRET_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-config-${K8S_NAME}
+                  key: password
+            - name: JAVA_OPTIONS
+              value: "-Xmx4g -Xms1500m"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: K8S_ENABLE_DEBUGGING
+              value: "YES"
+          resources:
+            requests:
+              cpu: 400m
+              memory: 1.5Gi
+            limits:
+              memory: 4Gi
+          volumeMounts:
+            - mountPath: /root/project-home
+              name: pv-${K8S_NAME}
+              subPathExpr: ${K8S_NAME}/$(POD_NAME)
+            - mountPath: /root/project-home/application.yml
+              subPath: application.yml
+              name: app-${K8S_NAME}-application
+#      initContainers:
+#        - name: init-${K8S_NAME}
+#          image: imega/mysql-client
+#          command: [ 'sh', '-c', "until [ `mysql -h $K8S_SECRET_DB_HOST $K8S_SECRET_DB_NAME -u $K8S_SECRET_DB_USER -p$K8S_SECRET_DB_PASSWORD -s -e 'select exists(select * from flyway_schema_history where version=\"$(VERSION)\" and success=1);'` -eq 1 ]; do sleep 30;  done;" ]
+#          env:
+#            - name: VERSION
+#              value: "${MIGRATION_TARGET_VERSION}"
+#            - name: K8S_SECRET_DB_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: db-config-${K8S_NAME}
+#                  key: password
+#            - name: K8S_SECRET_DB_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: db-config-${K8S_NAME}
+#                  key: user
+#            - name: K8S_SECRET_DB_HOST
+#              valueFrom:
+#                secretKeyRef:
+#                  name: db-config-${K8S_NAME}
+#                  key: host
+#            - name: K8S_SECRET_DB_NAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: db-config-${K8S_NAME}
+#                  key: database
+      volumes:
+        - name: pv-${K8S_NAME}
+          persistentVolumeClaim:            
+            claimName: ${K8S_NAME}
+        - name: app-${K8S_NAME}-application
+          configMap:
+            name: app-${K8S_NAME}-application
