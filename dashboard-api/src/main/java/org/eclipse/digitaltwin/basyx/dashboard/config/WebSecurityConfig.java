@@ -35,8 +35,7 @@ public class WebSecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(customizer -> customizer
-                        .anyRequest()
-                        .hasAuthority("ROLE_USER")
+                        anyRequest().authenticated();
                 );
 
         return http.build();
