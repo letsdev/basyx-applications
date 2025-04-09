@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${K8S_NAME}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/affinity: "cookie"    
+    nginx.ingress.kubernetes.io/affinity-mode: "persistent"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: “300”
+    nginx.ingress.kubernetes.io/session-cookie-expires: “300”
+    nginx.ingress.kubernetes.io/proxy-body-size: "220m"
+    nginx.org/client-max-body-size: "220m"
+spec:
+  tls:
+    - hosts:
+      - ${K8S_HOST}
+      secretName: tls-${K8S_HOST}
+  rules:
+    - host: ${K8S_HOST}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${K8S_NAME}
+                port:
+                  number: 8085

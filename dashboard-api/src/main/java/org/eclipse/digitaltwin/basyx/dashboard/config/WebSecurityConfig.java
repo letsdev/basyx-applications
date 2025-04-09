@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -20,8 +22,12 @@ public class WebSecurityConfig {
     public WebSecurityConfig(LdSsoConfigProperties ldSsoConfigProperties) {
 
         this.ldSsoConfigProperties = ldSsoConfigProperties;
+
+        Logger log = LoggerFactory.getLogger("WebSecurityConfig");
+        log.info("LD SSO BASE URL: {}", ldSsoConfigProperties.getBaseUrl());
     }
 
+    
     @Bean
     public  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -43,6 +49,6 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.debug(false);
+        return web -> web.debug(ldSsoConfigProperties.getDebugEnabled());
     }
 }
