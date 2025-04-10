@@ -12,5 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class LdSsoConfigProperties {
 
     String baseUrl;
+    String audience;
     Boolean debugEnabled = false;
 }

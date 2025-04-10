@@ -17,4 +17,6 @@ basyx:
   externalurl: "https://dashboard.aas.trumpf.twinmap.de"
 
 ld-sso:
-  baseUrl: "https://sso.twinmap.de/"
+  base-url: ${LD_SSO_BASE_URL}
+  audience: ${LD_SSO_AUDIENCE}
+  debug-enabled: false
