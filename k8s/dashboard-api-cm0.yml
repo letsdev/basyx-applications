@@ -1,4 +1,11 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: dashboard-api
+  name: dashboard-api-cm0
 data:
   aas-dashboard.yml: |
     server:
@@ -10,8 +17,6 @@ data:
           host: mongodb.database.svc.cluster.local
           database: aas-dashboard
           authentication-database: admin
-          username: root
-          password: nrEPLwl3Me
 
     basyx:
       cors:
@@ -21,10 +26,3 @@ data:
 
     ld-sso:
       debug-enabled: false
-kind: ConfigMap
-metadata:
-  annotations:
-    use-subpath: "true"
-  labels:
-    io.kompose.service: dashboard-api
-  name: dashboard-api-cm0
